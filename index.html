@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Private Tic-Tac-Toe ❤️</title>
+    
+    <!-- Romantic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ffafbd;
+            --deep-rose: #ffc3a0;
+            --heart-red: #ff4d6d;
+            --soft-white: #fff0f3;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #4a4a4a;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .setup-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-size: 0.8rem; color: var(--heart-red); margin-bottom: 5px; font-weight: bold;}
+
+        input {
+            padding: 12px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: var(--heart-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover { background: #e63958; transform: translateY(-2px); }
+
+        #status { 
+            color: white; 
+            font-weight: 500; 
+            margin: 20px 0; 
+            font-size: 1.4rem; 
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* THE GAME BOARD */
+        .board {
+            display: none; 
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 15px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: var(--soft-white);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            color: var(--heart-red);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+
+        .cell:hover { background: white; transform: scale(1.02); }
+        .cell.taken { cursor: not-allowed; }
+
+        #restartBtn {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            color: var(--heart-red);
+            font-weight: bold;
+            width: auto;
+            padding: 10px 30px;
+        }
+
+        .love-icon { color: white; font-size: 1.2rem; margin-top: 30px; opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <h1>For Us ❤️</h1>
+    
+    <div class="setup-box" id="setup">
+        <div class="input-group">
+            <label>YOUR NAME</label>
+            <input type="text" id="nameInput" placeholder="Enter your name">
+        </div>
+        <div class="input-group">
+            <label>SECRET CODE</label>
+            <input type="text" id="roomInput" placeholder="e.g. 112233">
+        </div>
+        <button onclick="joinRoom()">Enter Our Space ❤️</button>
+    </div>
+
+    <div id="status"></div>
+
+    <div class="board" id="board">
+        <div class="cell" onclick="makeMove(0)" id="c0"></div>
+        <div class="cell" onclick="makeMove(1)" id="c1"></div>
+        <div class="cell" onclick="makeMove(2)" id="c2"></div>
+        <div class="cell" onclick="makeMove(3)" id="c3"></div>
+        <div class="cell" onclick="makeMove(4)" id="c4"></div>
+        <div class="cell" onclick="makeMove(5)" id="c5"></div>
+        <div class="cell" onclick="makeMove(6)" id="c6"></div>
+        <div class="cell" onclick="makeMove(7)" id="c7"></div>
+        <div class="cell" onclick="makeMove(8)" id="c8"></div>
+    </div>
+
+    <button id="restartBtn" onclick="restartGame()">Play Again 🔄</button>
+
+    <div class="love-icon">Together, even miles apart. ✨</div>
+
+    <!-- FIREBASE SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        // PASTE YOUR FIREBASE CONFIG HERE
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-i0_FDxzVLbGDIHQTpqHNSyi2QcN4UaM",
+            authDomain: "ourlovegame-770b4.firebaseapp.com",
+            databaseURL: "https://ourlovegame-770b4-default-rtdb.firebaseio.com",
+            projectId: "ourlovegame-770b4",
+            storageBucket: "ourlovegame-770b4.firebasestorage.app",
+            messagingSenderId: "397754256619",
+            appId: "1:397754256619:web:05a2f1afc0ccfe994cc2ae"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let roomID = "";
+        let mySymbol = ""; 
+        let myName = "";
+        let opponentName = "My Love";
+        let currentBoard = Array(9).fill("");
+        let turn = "X";
+
+        function joinRoom() {
+            roomID = document.getElementById("roomInput").value;
+            myName = document.getElementById("nameInput").value;
+            
+            if (!roomID || !myName) return alert("Please enter both your name and the secret code!");
+
+            const roomRef = database.ref('rooms/' + roomID);
+
+            roomRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    mySymbol = "X";
+                    roomRef.set({
+                        board: Array(9).fill(""),
+                        turn: "X",
+                        playerX: myName,
+                        playerO: "Waiting...",
+                        gameOver: false
+                    });
+                } else {
+                    mySymbol = "O";
+                    roomRef.update({ playerO: myName });
+                }
+
+                document.getElementById("setup").style.display = "none";
+                document.getElementById("board").style.display = "grid";
+                listenForUpdates();
+            });
+        }
+
+        function listenForUpdates() {
+            database.ref('rooms/' + roomID).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                currentBoard = data.board;
+                turn = data.turn;
+                const pX = data.playerX;
+                const pO = data.playerO;
+                opponentName = (mySymbol === "X") ? pO : pX;
+
+                // Update UI Board
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.getElementById('c' + i);
+                    cell.innerText = currentBoard[i];
+                    cell.classList.toggle('taken', currentBoard[i] !== "");
+                }
+
+                const winnerSymbol = checkWinner(currentBoard);
+                
+                if (winnerSymbol) {
+                    let winnerName = (winnerSymbol === "X") ? pX : pO;
+                    document.getElementById("status").innerText = "✨ " + winnerName + " won your heart! ❤️";
+                    document.getElementById("restartBtn").style.display = "block";
+                } else if (!currentBoard.includes("")) {
+                    document.getElementById("status").innerText = "It's a tie! Both win in love! ✨";
+                    document.getElementById("restartBtn").style.display = "block";
+                } else {
+                    document.getElementById("restartBtn").style.display = "none";
+                    if (turn === mySymbol) {
+                        document.getElementById("status").innerText = "Your turn, " + myName + "!";
+                    } else {
+                        document.getElementById("status").innerText = "Waiting for " + opponentName + "...";
+                    }
+                }
+            });
+        }
+
+        function makeMove(index) {
+            if (turn !== mySymbol || currentBoard[index] !== "" || checkWinner(currentBoard)) return;
+
+            currentBoard[index] = mySymbol;
+            const nextTurn = mySymbol === "X" ? "O" : "X";
+
+            database.ref('rooms/' + roomID).update({
+                board: currentBoard,
+                turn: nextTurn
+            });
+        }
+
+        function restartGame() {
+            database.ref('rooms/' + roomID).update({
+                board: Array(9).fill(""),
+                turn: "X"
+            });
+        }
+
+        function checkWinner(board) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for (let combo of wins) {
+                if (board[combo[0]] && board[combo[0]] === board[combo[1]] && board[combo[0]] === board[combo[2]]) {
+                    return board[combo[0]];
+                }
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>
