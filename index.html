@@ -83,6 +83,18 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
+	/* Styling for the romantic instruction text */
+	
+.romantic-instruction {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: var(--heart-red);
+    margin-bottom: 20px;
+    line-height: 1.4;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+}
+
         /* THE GAME BOARD */
         .board {
             display: none; 
@@ -129,17 +141,25 @@
 
     <h1>For Us ❤️</h1>
     
-    <div class="setup-box" id="setup">
-        <div class="input-group">
-            <label>YOUR NAME</label>
-            <input type="text" id="nameInput" placeholder="Enter your name">
-        </div>
-        <div class="input-group">
-            <label>SECRET CODE</label>
-            <input type="text" id="roomInput" placeholder="e.g. 112233">
-        </div>
-        <button onclick="joinRoom()">Enter Our Space ❤️</button>
+    <div class="setup-box" id="setup-area" style="margin: 0 auto 20px;">
+    <!-- THE ROMANTIC TEXT YOU REQUESTED -->
+    <div class="romantic-instruction">
+        Enter the secret numbers that connect our hearts, <br> 
+        and let the games begin... ❤️
     </div>
+
+    <div class="input-group">
+        <label>YOUR NAME</label>
+        <input type="text" id="nameInput" placeholder="How should I call you?">
+    </div>
+    
+    <div class="input-group">
+        <label>OUR SECRET CODE</label>
+        <input type="text" id="roomInput" placeholder="e.g. Our Anniversary">
+    </div>
+    
+    <button onclick="joinRoom()">Connect Our Hearts ❤️</button>
+</div>
 
     <div id="status"></div>
 
