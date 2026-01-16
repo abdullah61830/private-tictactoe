@@ -1,4 +1,3 @@
-# private-tictactoe
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=30&height=200&section=header&text=Our%20Private%20Space%20❤️&fontSize=50&animation=fadeIn&fontAlignY=38" />
 </p>
