@@ -65,6 +65,7 @@
             flex: 1; width: 100%; max-width: 380px; background: rgba(255, 255, 255, 0.85);
             border-radius: 30px; display: flex; flex-direction: column; height: 550px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.1); backdrop-filter: blur(10px); border: 2px solid white;
+            overflow: hidden;
         }
 
         #chat-header {
@@ -73,112 +74,69 @@
             text-align: center; border-bottom: 1px solid #eee;
         }
 
-        #chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px 15px; border-radius: 18px; font-size: 0.9rem; max-width: 80%; animation: pop 0.3s ease; line-height: 1.4; }
+        #chat-messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg { 
+            padding: 10px 15px; 
+            border-radius: 18px; 
+            font-size: 0.9rem; 
+            max-width: 85%; 
+            animation: pop 0.3s ease; 
+            line-height: 1.4;
+            /* FIXED BLEEDING ISSUE HERE */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+        
         .msg.me { align-self: flex-end; background: var(--heart-red); color: white; border-bottom-right-radius: 2px; }
         .msg.them { align-self: flex-start; background: white; color: #444; border-bottom-left-radius: 2px; border: 1px solid #eee; }
         .msg-sender { font-size: 0.65rem; margin-bottom: 3px; font-weight: bold; opacity: 0.8; }
 
+        #typing-indicator { padding: 0 20px 5px; font-size: 0.75rem; color: var(--heart-red); font-style: italic; height: 18px; font-weight: 500; }
         #chat-input-area { padding: 12px; display: flex; gap: 8px; background: white; border-radius: 0 0 30px 30px; }
-        #chatInput { margin: 0; border-radius: 20px; border: 1px solid #ddd; padding: 8px 15px; }
+        #chatInput { margin: 0; border-radius: 20px; border: 1px solid #ddd; padding: 8px 15px; flex: 1; }
         #sendChatBtn { width: 50px; margin: 0; background: var(--heart-red); border-radius: 15px; }
 
         /* 4. SCOREBOARD */
-        #score-board {
-            display: flex; gap: 8px; width: 100%; justify-content: center; margin-bottom: 12px;
-        }
-        .score-item {
-            background: var(--velvet-berry); backdrop-filter: blur(8px);
-            padding: 5px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3);
-            text-align: center; min-width: 85px; color: white;
-        }
+        #score-board { display: flex; gap: 8px; width: 100%; justify-content: center; margin-bottom: 12px; }
+        .score-item { background: var(--velvet-berry); backdrop-filter: blur(8px); padding: 5px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); text-align: center; min-width: 85px; color: white; }
         .score-label { font-size: 0.6rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
         .score-val { font-size: 1.1rem; font-weight: 600; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 
         /* 5. PLAYER BAR */
         #player-bar { display: flex; gap: 12px; margin-bottom: 18px; width: 100%; justify-content: center; }
-        .player-tag {
-            background: var(--velvet-berry); padding: 10px 20px; border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 2.5px solid white;
-            font-size: 0.95rem; color: white; font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
+        .player-tag { background: var(--velvet-berry); padding: 10px 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 2.5px solid white; font-size: 0.95rem; color: white; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
         .player-tag span { color: var(--primary-pink); font-weight: 800; margin-left: 5px;}
 
         /* STATUS BAR */
-        #status { 
-            color: white; font-size: 1.5rem; margin-bottom: 20px; 
-            font-family: 'Dancing Script', cursive; font-weight: bold;
-            background: var(--velvet-berry); padding: 8px 30px; border-radius: 35px;
-            backdrop-filter: blur(5px); border: 2.5px solid white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
+        #status { color: white; font-size: 1.5rem; margin-bottom: 20px; font-family: 'Dancing Script', cursive; font-weight: bold; background: var(--velvet-berry); padding: 8px 30px; border-radius: 35px; backdrop-filter: blur(5px); border: 2.5px solid white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
 
         /* 6. GAME BOARD */
-        .board {
-            display: grid; grid-template-columns: repeat(3, 110px); grid-gap: 12px;
-            background: rgba(255, 255, 255, 0.2); padding: 15px;
-            border-radius: 30px; border: 2px solid rgba(255,255,255,0.5);
-            backdrop-filter: blur(10px);
-        }
+        .board { display: grid; grid-template-columns: repeat(3, 110px); grid-gap: 12px; background: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.5); backdrop-filter: blur(10px); }
         .board.my-turn { box-shadow: 0 0 35px rgba(255, 255, 255, 0.5); transform: translateY(-3px); }
-
-        .cell {
-            width: 110px; height: 110px; background: var(--soft-white);
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 3.5rem; cursor: pointer; color: var(--heart-red); transition: 0.3s;
-        }
+        .cell { width: 110px; height: 110px; background: var(--soft-white); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; cursor: pointer; color: var(--heart-red); transition: 0.3s; }
         .cell:hover:not(.taken) { background: white; transform: scale(1.03); }
-
+        
         /* HEARTBEAT WINNER ANIMATION */
         .cell.winner { 
             background: var(--luminous-ruby) !important; 
             color: white !important; 
             box-shadow: 0 0 25px rgba(255, 0, 85, 0.7);
-            animation: heartbeat 1.2s infinite; /* Real Heartbeat effect */
+            animation: heartbeat 1.2s infinite; 
         }
 
-        /* RESTART BUTTON */
-        #restartBtn {
-            display: none; 
-            background: var(--velvet-berry);
-            backdrop-filter: blur(10px);
-            border: 2px solid white;
-            color: white; 
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.3rem; 
-            font-weight: bold;
-            width: auto; 
-            margin-top: 20px; 
-            padding: 8px 40px; 
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-        #restartBtn:hover {
-            background: white;
-            color: var(--heart-red);
-            transform: scale(1.05);
-        }
+        #restartBtn { display: none; background: var(--velvet-berry); backdrop-filter: blur(10px); border: 2px solid white; color: white; font-family: 'Dancing Script', cursive; font-size: 1.3rem; font-weight: bold; width: auto; margin-top: 20px; padding: 8px 40px; border-radius: 50px; cursor: pointer; transition: 0.3s ease; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+        #restartBtn:hover { background: white; color: var(--heart-red); transform: scale(1.05); }
 
         .footer-line { color: white; margin-top: 25px; opacity: 0.9; font-style: italic; font-size: 0.9rem; }
 
         @keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* REAL HEARTBEAT KEYFRAMES */
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.1); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.15); }
-            70% { transform: scale(1); }
-        }
+        @keyframes heartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.1); } 28% { transform: scale(1); } 42% { transform: scale(1.15); } 70% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <!-- LOCK SCREEN -->
     <div id="lock-screen">
         <div class="setup-box">
             <div class="romantic-title">A Heart's Key</div>
@@ -189,7 +147,6 @@
         </div>
     </div>
 
-    <!-- GAME SETUP SCREEN -->
     <div id="game-content">
         <div id="setup-area" style="display: flex; justify-content: center; margin-bottom: 30px;">
             <div class="setup-box">
@@ -208,6 +165,7 @@
             <div id="chat-container">
                 <div id="chat-header">Our Love Notes 💌</div>
                 <div id="chat-messages"></div>
+                <div id="typing-indicator"></div>
                 <div id="chat-input-area">
                     <input type="text" id="chatInput" placeholder="Send a kiss..." onkeypress="if(event.key==='Enter') sendChatMessage()">
                     <button id="sendChatBtn" onclick="sendChatMessage()">➤</button>
@@ -216,18 +174,9 @@
 
             <div id="game-area" style="display: flex; flex-direction: column; align-items: center;">
                 <div id="score-board">
-                    <div class="score-item">
-                        <div class="score-label">OUR JOURNEY</div>
-                        <div class="score-val" id="total-games">0</div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-label" id="label-x">Player X</div>
-                        <div class="score-val" id="wins-x">0</div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-label" id="label-o">Player O</div>
-                        <div class="score-val" id="wins-o">0</div>
-                    </div>
+                    <div class="score-item"><div class="score-label">OUR JOURNEY</div><div class="score-val" id="total-games">0</div></div>
+                    <div class="score-item"><div class="score-label" id="label-x">Player X</div><div class="score-val" id="wins-x">0</div></div>
+                    <div class="score-item"><div class="score-label" id="label-o">Player O</div><div class="score-val" id="wins-o">0</div></div>
                 </div>
 
                 <div id="player-bar">
@@ -274,6 +223,7 @@
         const database = firebase.database();
 
         let roomID, mySymbol, myName, opponentName, currentBoard, turn;
+        let typingTimeout;
 
         function checkPassword() {
             if(document.getElementById('passInput').value === SECRET_PASSWORD) {
@@ -292,10 +242,7 @@
                 const data = snapshot.val();
                 if (!data) {
                     mySymbol = "X";
-                    roomRef.set({ 
-                        board: Array(9).fill(""), turn: "X", playerX: myName, playerO: "Waiting...",
-                        winsX: 0, winsO: 0, totalMatches: 0, scored: false
-                    });
+                    roomRef.set({ board: Array(9).fill(""), turn: "X", playerX: myName, playerO: "Waiting...", winsX: 0, winsO: 0, totalMatches: 0, scored: false });
                 } else {
                     mySymbol = "O";
                     roomRef.update({ playerO: myName });
@@ -304,6 +251,30 @@
                 document.getElementById("main-dashboard").style.display = "flex";
                 listenForUpdates();
                 listenForChat();
+                listenForTyping();
+            });
+        }
+
+        const chatInput = document.getElementById('chatInput');
+        chatInput.addEventListener('input', () => {
+            updateTypingStatus(true);
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => updateTypingStatus(false), 2000);
+        });
+
+        function updateTypingStatus(isTyping) {
+            if (!roomID) return;
+            database.ref('rooms/' + roomID + '/typing/' + mySymbol).set(isTyping);
+        }
+
+        function listenForTyping() {
+            const opponentSymbol = (mySymbol === 'X' ? 'O' : 'X');
+            database.ref('rooms/' + roomID + '/typing/' + opponentSymbol).on('value', (snapshot) => {
+                const isTyping = snapshot.val();
+                const indicator = document.getElementById('typing-indicator');
+                if (isTyping && opponentName !== "Waiting...") {
+                    indicator.innerText = `💖 ${opponentName} is pouring their heart out...`;
+                } else { indicator.innerText = ""; }
             });
         }
 
@@ -313,25 +284,20 @@
                 if (!data) return;
                 currentBoard = data.board;
                 turn = data.turn;
-                
                 document.getElementById('total-games').innerText = data.totalMatches || 0;
                 document.getElementById('wins-x').innerText = data.winsX || 0;
                 document.getElementById('wins-o').innerText = data.winsO || 0;
                 document.getElementById('label-x').innerText = data.playerX.split(' ')[0] + "'s Wins";
                 document.getElementById('label-o').innerText = data.playerO.split(' ')[0] + "'s Wins";
-                
                 document.getElementById('tag-X').innerHTML = `${data.playerX} <span>(X)</span>`;
                 document.getElementById('tag-O').innerHTML = `${data.playerO} <span>(O)</span>`;
-
                 opponentName = (mySymbol === "X") ? data.playerO : data.playerX;
                 const boardEl = document.getElementById("game-board");
-
                 for (let i = 0; i < 9; i++) {
                     const cell = document.getElementById('c' + i);
                     cell.innerText = currentBoard[i];
                     cell.classList.remove('winner');
                 }
-
                 const winInfo = checkWinner(currentBoard);
                 if (winInfo) {
                     let winName = (winInfo.symbol === "X") ? data.playerX : data.playerO;
@@ -339,30 +305,17 @@
                     winInfo.line.forEach(idx => document.getElementById('c'+idx).classList.add('winner'));
                     document.getElementById("restartBtn").style.display = "block";
                     boardEl.classList.remove("my-turn");
-                    
                     if(!data.scored && mySymbol === "X") {
-                        database.ref('rooms/' + roomID).update({
-                            scored: true,
-                            totalMatches: (data.totalMatches || 0) + 1,
-                            winsX: winInfo.symbol === "X" ? (data.winsX || 0) + 1 : (data.winsX || 0),
-                            winsO: winInfo.symbol === "O" ? (data.winsO || 0) + 1 : (data.winsO || 0)
-                        });
+                        database.ref('rooms/' + roomID).update({ scored: true, totalMatches: (data.totalMatches || 0) + 1, winsX: winInfo.symbol === "X" ? (data.winsX || 0) + 1 : (data.winsX || 0), winsO: winInfo.symbol === "O" ? (data.winsO || 0) + 1 : (data.winsO || 0) });
                     }
                 } else if (!currentBoard.includes("")) {
                     document.getElementById("status").innerText = "A Beautiful Tie! ❤️";
                     document.getElementById("restartBtn").style.display = "block";
-                    if(!data.scored && mySymbol === "X") {
-                        database.ref('rooms/' + roomID).update({ scored: true, totalMatches: (data.totalMatches || 0) + 1 });
-                    }
+                    if(!data.scored && mySymbol === "X") { database.ref('rooms/' + roomID).update({ scored: true, totalMatches: (data.totalMatches || 0) + 1 }); }
                 } else {
                     document.getElementById("restartBtn").style.display = "none";
-                    if (turn === mySymbol) {
-                        document.getElementById("status").innerText = "Your Turn ✨";
-                        boardEl.classList.add("my-turn");
-                    } else {
-                        document.getElementById("status").innerText = "Waiting for " + (opponentName === "Waiting..." ? "you" : opponentName) + "... ❤️";
-                        boardEl.classList.remove("my-turn");
-                    }
+                    if (turn === mySymbol) { document.getElementById("status").innerText = "Your Turn ✨"; boardEl.classList.add("my-turn"); }
+                    else { document.getElementById("status").innerText = "Waiting for " + (opponentName === "Waiting..." ? "you" : opponentName) + "... ❤️"; boardEl.classList.remove("my-turn"); }
                 }
             });
         }
@@ -373,17 +326,11 @@
             database.ref('rooms/' + roomID).update({ board: currentBoard, turn: (mySymbol === "X" ? "O" : "X") });
         }
 
-        function restartGame() {
-            database.ref('rooms/' + roomID).update({ board: Array(9).fill(""), turn: "X", scored: false });
-        }
+        function restartGame() { database.ref('rooms/' + roomID).update({ board: Array(9).fill(""), turn: "X", scored: false }); }
 
         function checkWinner(b) {
             const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for (let line of lines) {
-                if (b[line[0]] && b[line[0]] === b[line[1]] && b[line[0]] === b[line[2]]) {
-                    return { symbol: b[line[0]], line: line };
-                }
-            }
+            for (let line of lines) { if (b[line[0]] && b[line[0]] === b[line[1]] && b[line[0]] === b[line[2]]) { return { symbol: b[line[0]], line: line }; } }
             return null;
         }
 
@@ -391,6 +338,7 @@
             const msgInput = document.getElementById("chatInput");
             if (!msgInput.value.trim()) return;
             database.ref('rooms/' + roomID + '/messages').push({ sender: myName, text: msgInput.value });
+            updateTypingStatus(false);
             msgInput.value = "";
         }
 
