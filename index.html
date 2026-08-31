@@ -4,188 +4,730 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Secret Space ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Noto+Color+Emoji&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Canvas Confetti Library for Crisp Party Poppers -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
-            --primary-pink: #ffafbd;
-            --deep-rose: #ffc3a0;
-            --heart-red: #ff4d6d;
+            --primary-pink: #f4a4d0;
+            --deep-rose: #e55797;
+            --heart-red: #ff2a5f;
             --soft-white: rgba(255, 240, 243, 0.95);
-            --luminous-ruby: #ff0055; 
-            --velvet-berry: rgba(133, 14, 45, 0.85); 
+            --velvet-berry: rgba(110, 10, 38, 0.9); 
+            --luminous-ruby: #ff0055;
+            --chat-light-bg: #fff0f3;
+            --symbol-x: #ff2a5f;
+            --symbol-o: #9d4edd;
         }
 
-        body {
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            min-height: 100vh; width: 100%;
+            font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
             background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
-            font-family: 'Poppins', sans-serif;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh; margin: 0; color: #4a4a4a; overflow-x: hidden;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* 1. LOCK SCREEN */
         #lock-screen {
-            position: fixed; top:0; left:0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://www.transparenttextures.com/patterns/cuis-hearts.png');
-            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000000;
+            background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+        }
+
+        .bg-heart {
+            position: absolute; color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem; pointer-events: none;
+            animation: floatUp 7s linear infinite;
+            bottom: -50px;
+            font-family: 'Noto Color Emoji', sans-serif;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
 
         .setup-box {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px; border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            text-align: center; width: 350px; border: 1px solid white;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 32px;
+            border-radius: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            width: 380px;
+            max-width: 90%;
+            border: 1px solid white;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
-        .romantic-title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--heart-red); margin-bottom: 10px; }
-        .romantic-subtitle { font-size: 0.9rem; color: #888; margin-bottom: 30px; font-style: italic; }
-
-        input {
-            padding: 14px; border: 2px solid var(--primary-pink);
-            border-radius: 15px; outline: none; font-size: 1rem;
-            width: 100%; box-sizing: border-box; margin-bottom: 15px;
+        .setup-box.loading .romantic-title,
+        .setup-box.loading input,
+        .setup-box.loading button,
+        .setup-box.loading .private-text,
+        .setup-box.loading .romantic-quote {
+            display: none;
         }
 
-        button {
-            background: var(--heart-red); color: white; border: none;
-            padding: 14px 25px; border-radius: 15px; cursor: pointer;
-            font-weight: 500; width: 100%; margin-top: 5px; transition: 0.3s;
+        .heart-ornament {
+            color: var(--heart-red);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            animation: pulse-heart 2s infinite;
+            font-family: 'Noto Color Emoji', sans-serif;
         }
 
-        /* 2. DASHBOARD LAYOUT */
-        #game-content { display: none; width: 95%; max-width: 1100px; padding: 20px; animation: fadeIn 1s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse-heart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
 
-        .dashboard { display: flex; flex-direction: row; gap: 30px; align-items: flex-start; justify-content: center; }
+        .romantic-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--heart-red); margin-bottom: 5px; font-weight: 700; }
+        .romantic-quote { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; color: #bbb; margin-bottom: 22px; font-weight: 500; }
 
-        @media (max-width: 900px) { .dashboard { flex-direction: column; align-items: center; } }
+        input { 
+            width: 100%; padding: 13px 18px; border: 2px solid var(--primary-pink); 
+            border-radius: 15px; outline: none; font-family: 'Poppins', 'Noto Color Emoji', sans-serif; 
+            font-size: 0.95rem; transition: 0.3s; color: #444; background: white; margin-bottom: 12px;
+        }
+        input:focus { border-color: var(--heart-red); box-shadow: 0 0 12px rgba(255, 77, 109, 0.35); }
 
-        /* 3. CHAT BOX */
+        button { 
+            background: var(--heart-red); color: white; border: none; padding: 13px; 
+            border-radius: 15px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; 
+            font-family: 'Poppins', 'Noto Color Emoji', sans-serif; box-shadow: 0 8px 15px rgba(255, 77, 109, 0.2); 
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(255, 77, 109, 0.3); }
+
+        .romantic-spinner {
+            width: 16px; height: 16px; min-width: 16px; min-height: 16px;
+            aspect-ratio: 1 / 1; flex-shrink: 0; box-sizing: border-box;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+
+        .footer-group { margin-top: 20px; }
+        .private-text { font-size: 0.6rem; color: #999; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2px; }
+        .only-us { font-family: 'Dancing Script', cursive; color: var(--heart-red); font-size: 1.1rem; opacity: 0.8; }
+
+        /* 2. SETUP AREA & PERFECT CIRCULAR SPINNER */
+        #setup-area {
+            position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--primary-pink), var(--deep-rose));
+            z-index: 999999; overflow: hidden;
+        }
+
+        #setup-bg-elements { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+        #setup-bg-elements div {
+            position: absolute; bottom: -40px; font-size: 22px; color: var(--heart-red);
+            opacity: 0.85; pointer-events: none; animation: setupHeartLift 5s linear forwards;
+            font-family: 'Noto Color Emoji', sans-serif;
+        }
+
+        @keyframes setupHeartLift {
+            0% { transform: translateY(0) scale(0.6); opacity: 0.4; }
+            100% { transform: translateY(-140vh) scale(1.2); opacity: 0; }
+        }
+
+        #setup-loading {
+            display: none; position: absolute; inset: 0; flex-direction: column;
+            align-items: center; justify-content: center; gap: 16px; padding: 30px;
+            width: 100%; height: 100%; background: rgba(255, 255, 255, 0.98);
+            border-radius: 35px; z-index: 1000;
+        }
+
+        /* 100% GEOMETRIC PERFECT CIRCLE SPINNER */
+        .setup-spinner {
+            width: 46px; height: 46px; min-width: 46px; min-height: 46px;
+            aspect-ratio: 1 / 1; flex-shrink: 0; box-sizing: border-box;
+            border: 4px solid rgba(255, 77, 109, 0.2);
+            border-top: 4px solid var(--heart-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .sync-text { font-family: 'Dancing Script', 'Noto Color Emoji', cursive; color: var(--heart-red); font-size: 1.5rem; text-align: center; font-weight: 700; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 3. MAIN DASHBOARD */
+        #main-content {
+            display: none; width: 96%; max-width: 1160px; padding: 15px 10px;
+            animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dashboard {
+            display: flex; flex-direction: row; gap: 32px;
+            align-items: flex-start;
+            justify-content: center; width: 100%;
+        }
+
+        @media (max-width: 950px) {
+            .dashboard { flex-direction: column; align-items: center; gap: 20px; }
+            #chat-container { max-width: 100% !important; height: 480px !important; }
+            #game-area { max-width: 100% !important; height: auto !important; gap: 18px !important; }
+        }
+
+        /* 4. UPGRADED CHAT */
         #chat-container {
-            flex: 1; width: 100%; max-width: 380px; background: rgba(255, 255, 255, 0.85);
-            border-radius: 30px; display: flex; flex-direction: column; height: 550px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1); backdrop-filter: blur(10px); border: 2px solid white;
-            overflow: hidden;
+            flex: 1; width: 100%; max-width: 380px; height: 580px;
+            background-color: var(--chat-light-bg);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 20c0-2 2-4 4-4s4 2 4 4-4 6-8 10c-4-4-8-8-8-10s2-4 4-4 4 2 4 4zM50 70c0-1 1-2 2-2s2 1 2 2-2 3-4 5c-2-2-4-4-4-5s1-2 2-2 2 1 2 2zM80 30c0-1.5 1.5-3 3-3s3 1.5 3 3-3 4.5-6 7.5c-3-3-6-6-6-7.5s1.5-3 3-3 3 1.5 3 3z' fill='%23ffb3c1' fill-opacity='0.4'/%3E%3C/svg%3E");
+            border-radius: 30px; display: flex; flex-direction: column; border: 3px solid white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); overflow: hidden; backdrop-filter: blur(10px);
         }
 
         #chat-header {
-            padding: 15px; background: white; border-radius: 30px 30px 0 0;
-            font-family: 'Dancing Script'; font-size: 1.8rem; color: var(--heart-red);
-            text-align: center; border-bottom: 1px solid #eee;
+            padding: 16px; background: white; border-radius: 30px 30px 0 0;
+            font-family: 'Dancing Script', 'Noto Color Emoji', cursive; font-size: 1.8rem; color: var(--heart-red);
+            text-align: center; border-bottom: 1px solid #eee; flex-shrink: 0;
         }
 
-        #chat-messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        
+        #chat-messages {
+            flex: 1; overflow-y: auto; overflow-x: hidden; padding: 18px;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .date-separator {
+            text-align: center; font-size: 0.72rem; color: #888;
+            margin: 4px 0; font-weight: 500;
+        }
+
         .msg { 
-            padding: 10px 15px; 
+            position: relative; padding: 11px 16px 12px; border-radius: 18px; font-size: 0.88rem; 
+            max-width: 85%; min-width: 80px; animation: pop 0.3s ease; line-height: 1.4;
+            overflow-wrap: break-word; word-break: break-word; box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            display: flex; flex-direction: column; user-select: text;
+        }
+        
+        .msg.me { align-self: flex-end; background: var(--heart-red); color: white; border-bottom-right-radius: 3px; }
+        .msg.them { align-self: flex-start; background: white; color: #444; border-bottom-left-radius: 3px; border: 1px solid #ffe1e6; }
+        .msg-sender { font-size: 0.65rem; margin-bottom: 3px; font-weight: 700; opacity: 0.85; }
+        .msg-time { align-self: flex-end; font-size: 0.65rem; opacity: 0.8; margin-top: 3px; }
+        .msg.me .msg-time { color: #ffe1ec; }
+        .msg.them .msg-time { color: #888; }
+
+        .chat-link { color: inherit; text-decoration: underline; word-break: break-all; }
+
+        .msg .heart-pill {
+            position: absolute; bottom: -9px; left: 12px; padding: 3px 8px;
+            border-radius: 20px; display: none; align-items: center; justify-content: center;
+            font-size: 0.72rem; z-index: 10; cursor: pointer; user-select: none;
+            line-height: 1; transition: 0.2s; font-family: 'Noto Color Emoji', sans-serif;
+        }
+        .msg.me .heart-pill { background: white; color: var(--heart-red); border: 1.5px solid var(--heart-red); }
+        .msg.them .heart-pill { background: var(--velvet-berry); color: var(--heart-red); border: 1.5px solid rgba(255, 77, 109, 0.4); }
+
+        .msg .heart-pill.hearted { display: flex; animation: heartPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .msg.them:hover .heart-pill:not(.hearted) { display: flex; background: white; border: 1px solid #ddd; color: #ccc; }
+
+        @keyframes heartPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .heart-pill.heartbeat { animation: heartBeat 0.6s ease forwards; }
+        @keyframes heartBeat { 0% { transform: scale(1); } 25% { transform: scale(1.2); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
+
+        .small-heart {
+            position: absolute; font-size: 0.8rem; color: var(--heart-red);
+            pointer-events: none; animation: floatUpSmall 1s ease-out forwards; z-index: 10;
+            font-family: 'Noto Color Emoji', sans-serif;
+        }
+        @keyframes floatUpSmall {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx, 0), var(--ty, -50px)) scale(0.5); }
+        }
+
+        /* VIBRANT & NOTICEABLE TYPING INDICATOR */
+        #typing-indicator { 
+            padding: 4px 18px; 
+            font-size: 0.76rem; 
+            color: var(--heart-red); 
+            font-style: italic; 
+            min-height: 22px; 
+            font-weight: 600; 
+            opacity: 0; 
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #typing-indicator.active {
+            opacity: 1;
+            animation: pulseTyping 1.8s infinite ease-in-out;
+        }
+        @keyframes pulseTyping {
+            0%, 100% { opacity: 0.85; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(3px); }
+        }
+
+        #chat-input-area { padding: 12px 16px; display: flex; gap: 8px; background: white; border-radius: 0 0 30px 30px; border-top: 1px solid #eee; }
+        
+        #chatInput { 
+            margin: 0; border-radius: 22px; border: 2px solid #ecd8dd; padding: 10px 18px; 
+            flex: 1; font-size: 0.9rem; transition: all 0.3s ease; outline: none;
+        }
+        #chatInput:focus {
+            border-color: var(--heart-red) !important;
+            box-shadow: 0 0 14px rgba(255, 77, 109, 0.45) !important;
+        }
+
+        #sendChatBtn { width: 44px; height: 44px; margin: 0; background: var(--heart-red); border-radius: 50%; padding: 0; font-size: 1.1rem; flex-shrink: 0; }
+
+        /* 5. AESTHETIC & VERTICALLY CENTERED GAME AREA */
+        #game-area { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: space-between;
+            height: 580px;
+            flex: 1; 
+            max-width: 530px; 
+            width: 100%;
+        }
+
+        /* 3-COLUMN CSS GRID (PERFECT CENTER ALIGNMENT REGARDLESS OF NAME LENGTH) */
+        #match-hub {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 100%; 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(16px);
+            padding: 10px 16px; 
+            border-radius: 26px; 
+            border: 1.5px solid white;
+            box-shadow: 0 12px 30px rgba(100, 10, 35, 0.08), inset 0 1px 1px rgba(255,255,255,0.9);
+            margin: 0; 
+            gap: 8px;
+        }
+
+        .player-card {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px;
+            padding: 6px 12px; 
             border-radius: 18px; 
-            font-size: 0.9rem; 
-            max-width: 85%; 
-            animation: pop 0.3s ease; 
-            line-height: 1.4;
-            /* FIXED BLEEDING ISSUE HERE */
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            word-break: break-word;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: transparent;
+        }
+
+        #card-X { justify-self: start; }
+        #card-O { justify-self: end; }
+
+        .player-card.active-turn {
+            background: white;
+            box-shadow: 0 6px 18px rgba(255, 77, 109, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .player-avatar {
+            width: 42px; height: 42px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.3rem; color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12); flex-shrink: 0;
+        }
+        .player-avatar.sym-x { background: linear-gradient(135deg, #ff2a5f, #ff6b8b); }
+        .player-avatar.sym-o { background: linear-gradient(135deg, #7b2cbf, #9d4edd); }
+
+        .player-details { display: flex; flex-direction: column; text-align: left; }
+        .player-details.text-right { text-align: right; align-items: flex-end; }
+
+        .name-wrapper { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+        
+        .player-name-text {
+            font-size: 0.9rem; font-weight: 700; color: #333;
+            white-space: nowrap;
+        }
+
+        .you-chip {
+            background: var(--heart-red); color: white; font-size: 0.58rem;
+            font-weight: 800; padding: 2px 6px; border-radius: 7px; letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(255, 77, 109, 0.3); flex-shrink: 0;
+        }
+
+        .player-wins-badge {
+            font-size: 0.72rem; color: #777; font-weight: 500; margin-top: 1px;
+        }
+        .player-wins-badge b { color: #222; font-weight: 800; font-size: 0.85rem; }
+
+        .match-center {
+            justify-self: center;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 3px;
+            padding: 0 4px; 
+            flex-shrink: 0;
+        }
+        .round-tag {
+            font-size: 0.6rem; text-transform: uppercase; font-weight: 800;
+            letter-spacing: 1.2px; color: #a58f96;
+        }
+        .turn-pill {
+            background: var(--velvet-berry); color: white; font-size: 0.75rem;
+            font-weight: 600; padding: 5px 14px; border-radius: 20px;
+            white-space: nowrap; box-shadow: 0 3px 10px rgba(110, 10, 38, 0.2);
+            transition: all 0.3s;
+        }
+        .turn-pill.my-turn-glow {
+            background: linear-gradient(135deg, #ff2a5f, #ff0055);
+            box-shadow: 0 0 14px rgba(255, 42, 95, 0.55);
+            animation: pulse-pill 1.5s infinite;
+        }
+
+        @keyframes pulse-pill {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 3D Glassmorphism Board */
+        .board { 
+            display: grid; grid-template-columns: repeat(3, 106px); grid-gap: 12px; 
+            background: rgba(255, 255, 255, 0.32); padding: 15px; border-radius: 28px; 
+            border: 2px solid rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); 
+            box-shadow: 0 15px 35px rgba(100, 10, 35, 0.12), inset 0 1px 2px rgba(255,255,255,0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: auto 0;
+        }
+
+        .board.my-turn { 
+            box-shadow: 0 0 32px rgba(255, 77, 109, 0.55), 0 15px 35px rgba(100, 10, 35, 0.2); 
+            border-color: rgba(255, 255, 255, 1);
+            transform: scale(1.01);
+        }
+
+        /* Modern Tactile Cells */
+        .cell { 
+            width: 106px; height: 106px; 
+            background: rgba(255, 255, 255, 0.92); 
+            border-radius: 22px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 3.5rem; font-weight: 800;
+            cursor: pointer; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            font-family: 'Poppins', 'Noto Color Emoji', sans-serif;
+            user-select: none;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.06), inset 0 2px 0 rgba(255,255,255,0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .cell:hover:not(.taken) { 
+            background: #ffffff; 
+            transform: translateY(-4px) scale(1.03); 
+            box-shadow: 0 12px 24px rgba(255, 77, 109, 0.25);
+            border-color: var(--primary-pink);
+        }
+
+        .cell.taken { cursor: default; }
+
+        /* Distinct Symbols */
+        .cell.is-x { 
+            color: var(--symbol-x); 
+            text-shadow: 0 0 12px rgba(255, 42, 95, 0.35); 
+            animation: symbolPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .cell.is-o { 
+            color: var(--symbol-o); 
+            text-shadow: 0 0 12px rgba(157, 78, 221, 0.35); 
+            animation: symbolPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes symbolPop {
+            0% { transform: scale(0.4); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         
-        .msg.me { align-self: flex-end; background: var(--heart-red); color: white; border-bottom-right-radius: 2px; }
-        .msg.them { align-self: flex-start; background: white; color: #444; border-bottom-left-radius: 2px; border: 1px solid #eee; }
-        .msg-sender { font-size: 0.65rem; margin-bottom: 3px; font-weight: bold; opacity: 0.8; }
-
-        #typing-indicator { padding: 0 20px 5px; font-size: 0.75rem; color: var(--heart-red); font-style: italic; height: 18px; font-weight: 500; }
-        #chat-input-area { padding: 12px; display: flex; gap: 8px; background: white; border-radius: 0 0 30px 30px; }
-        #chatInput { margin: 0; border-radius: 20px; border: 1px solid #ddd; padding: 8px 15px; flex: 1; }
-        #sendChatBtn { width: 50px; margin: 0; background: var(--heart-red); border-radius: 15px; }
-
-        /* 4. SCOREBOARD */
-        #score-board { display: flex; gap: 8px; width: 100%; justify-content: center; margin-bottom: 12px; }
-        .score-item { background: var(--velvet-berry); backdrop-filter: blur(8px); padding: 5px 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); text-align: center; min-width: 85px; color: white; }
-        .score-label { font-size: 0.6rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .score-val { font-size: 1.1rem; font-weight: 600; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-
-        /* 5. PLAYER BAR */
-        #player-bar { display: flex; gap: 12px; margin-bottom: 18px; width: 100%; justify-content: center; }
-        .player-tag { background: var(--velvet-berry); padding: 10px 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 2.5px solid white; font-size: 0.95rem; color: white; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        .player-tag span { color: var(--primary-pink); font-weight: 800; margin-left: 5px;}
-
-        /* STATUS BAR */
-        #status { color: white; font-size: 1.5rem; margin-bottom: 20px; font-family: 'Dancing Script', cursive; font-weight: bold; background: var(--velvet-berry); padding: 8px 30px; border-radius: 35px; backdrop-filter: blur(5px); border: 2.5px solid white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-
-        /* 6. GAME BOARD */
-        .board { display: grid; grid-template-columns: repeat(3, 110px); grid-gap: 12px; background: rgba(255, 255, 255, 0.2); padding: 15px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.5); backdrop-filter: blur(10px); }
-        .board.my-turn { box-shadow: 0 0 35px rgba(255, 255, 255, 0.5); transform: translateY(-3px); }
-        .cell { width: 110px; height: 110px; background: var(--soft-white); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; cursor: pointer; color: var(--heart-red); transition: 0.3s; }
-        .cell:hover:not(.taken) { background: white; transform: scale(1.03); }
-        
-        /* HEARTBEAT WINNER ANIMATION */
+        /* Glowing Winner Line */
         .cell.winner { 
-            background: var(--luminous-ruby) !important; 
+            background: linear-gradient(135deg, #ff0055, #ff4d6d) !important; 
             color: white !important; 
-            box-shadow: 0 0 25px rgba(255, 0, 85, 0.7);
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.85), inset 0 1px 2px rgba(255,255,255,0.7) !important; 
             animation: heartbeat 1.2s infinite; 
+            border-color: white !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
         }
 
-        #restartBtn { display: none; background: var(--velvet-berry); backdrop-filter: blur(10px); border: 2px solid white; color: white; font-family: 'Dancing Script', cursive; font-size: 1.3rem; font-weight: bold; width: auto; margin-top: 20px; padding: 8px 40px; border-radius: 50px; cursor: pointer; transition: 0.3s ease; box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
-        #restartBtn:hover { background: white; color: var(--heart-red); transform: scale(1.05); }
+        .footer-line { color: white; margin: 0; opacity: 0.95; font-style: italic; font-size: 0.85rem; text-shadow: 0 1px 3px rgba(0,0,0,0.2); text-align: center; }
 
-        .footer-line { color: white; margin-top: 25px; opacity: 0.9; font-style: italic; font-size: 0.9rem; }
+        /* PRESENCE TOAST NOTIFICATION */
+        #presence-alert {
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: var(--velvet-berry); color: white; padding: 10px 24px; border-radius: 50px;
+            font-family: 'Dancing Script', 'Noto Color Emoji', cursive; font-size: 1.2rem; font-weight: 700;
+            border: 2px solid rgba(255, 77, 109, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000000; opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; text-align: center; backdrop-filter: blur(5px);
+        }
+        #presence-alert.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* =========================================================
+           HEART-RED CHAMPION VICTORY OVERLAY
+        ========================================================= */
+        #win-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15, 2, 7, 0.58);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 999999;
+            animation: overlayFadeIn 0.35s ease;
+        }
+
+        .sunburst-rays {
+            position: absolute;
+            width: 620px; height: 620px;
+            background: radial-gradient(circle, rgba(255, 42, 95, 0.35) 0%, rgba(255, 0, 85, 0.15) 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rotateRay 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rotateRay {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        #champ-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fff2f5 100%);
+            border: 3px solid var(--heart-red);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 45px rgba(255, 42, 95, 0.5);
+            border-radius: 35px;
+            padding: 40px 32px 32px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            animation: gameCardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .heart-red-ribbon {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff2a5f, #ff0055);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            padding: 6px 24px;
+            border-radius: 50px;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(255, 42, 95, 0.45);
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-family: 'Poppins', 'Noto Color Emoji', sans-serif;
+        }
+
+        .champ-crown-icon {
+            font-size: 3.8rem;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            display: inline-block;
+            filter: drop-shadow(0 6px 14px rgba(255, 42, 95, 0.4));
+            animation: bounceBadge 2s infinite ease-in-out;
+            font-family: 'Noto Color Emoji', sans-serif;
+        }
+
+        .champ-title-text {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #2b030e;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .champ-subtitle-text {
+            font-family: 'Dancing Script', 'Noto Color Emoji', cursive;
+            font-size: 1.38rem;
+            color: var(--heart-red);
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .champ-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            background: #fff0f3;
+            padding: 8px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ffd1dc;
+        }
+        .stat-cell { font-size: 0.75rem; color: #777; font-weight: 600; }
+        .stat-cell b { color: #222; font-size: 0.88rem; font-weight: 800; }
+
+        .champ-btn-heart {
+            background: linear-gradient(135deg, #ff2a5f 0%, #d90445 100%);
+            color: white;
+            border: 2px solid white;
+            padding: 14px 28px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(217, 4, 69, 0.4);
+            transition: all 0.2s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .champ-btn-heart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 42, 95, 0.6);
+            background: linear-gradient(135deg, #ff4070 0%, #ff0055 100%);
+        }
+
+        @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes gameCardPop {
+            0% { transform: scale(0.6) translateY(30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        @keyframes bounceBadge {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.06); }
+        }
         @keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes heartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.1); } 28% { transform: scale(1); } 42% { transform: scale(1.15); } 70% { transform: scale(1); } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.08); } 28% { transform: scale(1); } 42% { transform: scale(1.12); } 70% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div id="lock-screen">
-        <div class="setup-box">
-            <div class="romantic-title">A Heart's Key</div>
-            <div class="romantic-subtitle">A secret place for two souls to meet... ❤️</div>
-            <label style="font-weight: bold; color: var(--heart-red); font-size: 0.75rem; display: block; margin-bottom: 8px;">THE SECRET PASSWORD</label>
-            <input type="password" id="passInput" placeholder="It's the date I kissed U for the first time...">
-            <button onclick="checkPassword()">Unlock Our Space ❤️</button>
+    <!-- PRESENCE TOAST -->
+    <div id="presence-alert"></div>
+
+    <!-- HEART-RED CHAMPION VICTORY MODAL OVERLAY (LOCKED TO PLAY AGAIN BUTTON) -->
+    <div id="win-overlay">
+        <div class="sunburst-rays"></div>
+        <div id="champ-card" onclick="event.stopPropagation()">
+            <div class="heart-red-ribbon" id="win-ribbon">🏆 MATCH CHAMPION</div>
+            <div class="champ-crown-icon" id="win-icon">👑</div>
+            <div class="champ-title-text" id="win-title">ROYAL VICTORY!</div>
+            <div class="champ-subtitle-text" id="win-subtitle">A flawless game from my love ❤️</div>
+
+            <div class="champ-stats-row">
+                <div class="stat-cell">MATCH: <b id="win-round-stat">#1</b></div>
+                <div style="color:#ffd1dc;">•</div>
+                <div class="stat-cell">SCORE: <b id="win-score-stat">You: 0 • Love: 0</b></div>
+            </div>
+
+            <button class="champ-btn-heart" onclick="restartGame()">Play Again ❤️</button>
         </div>
     </div>
 
-    <div id="game-content">
-        <div id="setup-area" style="display: flex; justify-content: center; margin-bottom: 30px;">
-            <div class="setup-box">
-                <div class="romantic-title" style="font-size: 2.5rem;">Connect to Me</div>
-                <div style="font-family: 'Dancing Script'; font-size: 1.4rem; color: var(--heart-red); margin-bottom: 20px; font-weight: bold; line-height: 1.2;">
-                    No distance is too far for hearts that are connected. <br>Enter our secret code... ❤️
-                </div>
-                <input type="text" id="nameInput" placeholder="How should I call you, my love?">
-                <input type="text" id="roomInput" placeholder="Our Secret Room Code">
-                <button onclick="joinRoom()">Enter Our World ❤️</button>
+    <!-- 1. LOCK SCREEN -->
+    <div id="lock-screen">
+        <div class="setup-box">
+            <div class="heart-ornament">❤️</div>
+            <div class="romantic-title">A Heart's Key</div>
+            <div class="romantic-quote">Our Secret Sanctuary</div>
+            
+            <input type="password" id="passInput" placeholder="••••••••" autocomplete="off" onkeypress="if(event.key==='Enter') verifyAccess()" style="text-align: center;">
+            <div id="statusText" style="color: var(--heart-red); font-size: 0.85rem; margin-bottom: 8px; display: none; font-weight: 500;"></div>
+
+            <button id="unlockBtn" onclick="verifyAccess()">
+                <span id="btnText">Unlock Our Space</span>
+                <span id="btnLoader" class="romantic-spinner" style="display: none;"></span>
+            </button>
+            
+            <div class="footer-group">
+                <div class="private-text">Private Access</div>
+                <div class="only-us">Only for us...</div>
             </div>
         </div>
+    </div>
 
-        <div class="dashboard" id="main-dashboard" style="display: none;">
+    <!-- 2. SETUP / ROOM CODE SCREEN -->
+    <div id="setup-area">
+        <div id="setup-bg-elements"></div>
+        <div class="setup-box">
+            <div id="setup-loading">
+                <div class="setup-spinner"></div>
+                <div class="sync-text">Connecting our hearts for a game... ❤️</div>
+            </div>
+            <div class="private-text" style="margin-bottom: 8px; font-size: 0.65rem; letter-spacing: 4px;">PRIVATE ACCESS</div>
+            <div class="romantic-title" style="font-size: 2.3rem;">Connect to Me</div>
+            <div style="font-family: 'Dancing Script', 'Noto Color Emoji'; font-size: 1.35rem; color: var(--heart-red); margin-bottom: 20px; font-weight: bold; line-height: 1.2;">
+                No distance is too far for hearts that are connected.
+            </div>
+            <input type="text" id="nameInput" placeholder="How should I call you, my love?">
+            <input type="text" id="roomInput" placeholder="Our Secret Room Code" onkeypress="if(event.key==='Enter') joinRoom()">
+            <button onclick="joinRoom()">Enter Our World ❤️</button>
+            <div class="private-text" style="margin-top: 25px; font-size: 0.6rem; letter-spacing: 2px;">TWO HEARTS • ONE GAME</div>
+        </div>
+    </div>
+
+    <!-- 3. MAIN DASHBOARD -->
+    <div id="main-content">
+        <div class="dashboard">
             
+            <!-- CHAT BOX -->
             <div id="chat-container">
                 <div id="chat-header">Our Love Notes 💌</div>
                 <div id="chat-messages"></div>
-                <div id="typing-indicator"></div>
+                <div id="typing-indicator">💖 Partner is typing something sweet...</div>
                 <div id="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="Send a kiss..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                    <input type="text" id="chatInput" placeholder="Whisper to my heart... ✨" onkeypress="if(event.key==='Enter') sendChatMessage()">
                     <button id="sendChatBtn" onclick="sendChatMessage()">➤</button>
                 </div>
             </div>
 
-            <div id="game-area" style="display: flex; flex-direction: column; align-items: center;">
-                <div id="score-board">
-                    <div class="score-item"><div class="score-label">OUR JOURNEY</div><div class="score-val" id="total-games">0</div></div>
-                    <div class="score-item"><div class="score-label" id="label-x">Player X</div><div class="score-val" id="wins-x">0</div></div>
-                    <div class="score-item"><div class="score-label" id="label-o">Player O</div><div class="score-val" id="wins-o">0</div></div>
-                </div>
-
-                <div id="player-bar">
-                    <div class="player-tag" id="tag-X">X Player <span>(X)</span></div>
-                    <div class="player-tag" id="tag-O">O Player <span>(O)</span></div>
-                </div>
-
-                <div id="status">Connecting our hearts...</div>
+            <!-- GAME AREA (MATCHES CHAT HEIGHT WITH PERFECTLY CENTERED TABLE) -->
+            <div id="game-area">
                 
+                <!-- UNCONGESTED AESTHETIC MATCH HUB (GRID PERFECT CENTER) -->
+                <div id="match-hub">
+                    <!-- PLAYER X -->
+                    <div class="player-card" id="card-X">
+                        <div class="player-avatar sym-x">X</div>
+                        <div class="player-details">
+                            <div class="name-wrapper">
+                                <span class="player-name-text" id="pname-X">Player X</span>
+                                <span class="you-chip" id="chip-X" style="display:none;">YOU</span>
+                            </div>
+                            <div class="player-wins-badge"><b id="pwins-X">0</b> wins</div>
+                        </div>
+                    </div>
+
+                    <!-- CENTER TURN STATUS (TRUE GEOMETRIC CENTER) -->
+                    <div class="match-center">
+                        <div class="round-tag" id="round-label">MATCH #1</div>
+                        <div class="turn-pill" id="turn-badge">Connecting...</div>
+                    </div>
+
+                    <!-- PLAYER O -->
+                    <div class="player-card" id="card-O">
+                        <div class="player-details text-right">
+                            <div class="name-wrapper" style="justify-content: flex-end;">
+                                <span class="you-chip" id="chip-O" style="display:none;">YOU</span>
+                                <span class="player-name-text" id="pname-O">Player O</span>
+                            </div>
+                            <div class="player-wins-badge"><b id="pwins-O">0</b> wins</div>
+                        </div>
+                        <div class="player-avatar sym-o">O</div>
+                    </div>
+                </div>
+                
+                <!-- 3X3 BOARD (VERTICALLY CENTERED IN REMAINING SPACE) -->
                 <div class="board" id="game-board">
                     <div class="cell" onclick="makeMove(0)" id="c0"></div>
                     <div class="cell" onclick="makeMove(1)" id="c1"></div>
@@ -197,161 +739,662 @@
                     <div class="cell" onclick="makeMove(7)" id="c7"></div>
                     <div class="cell" onclick="makeMove(8)" id="c8"></div>
                 </div>
-                <button id="restartBtn" onclick="restartGame()">Play Again ❤️</button>
+
                 <div class="footer-line">Miles apart, but together in every move. ✨</div>
             </div>
+
         </div>
     </div>
 
+    <!-- FIREBASE COMPAT SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        const SECRET_PASSWORD = "150126"; 
-
+        // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
-            apiKey: "AIzaSyD-i0_FDxzVLbGDIHQTpqHNSyi2QcN4UaM",
-            authDomain: "ourlovegame-770b4.firebaseapp.com",
-            databaseURL: "https://ourlovegame-770b4-default-rtdb.firebaseio.com",
-            projectId: "ourlovegame-770b4",
-            storageBucket: "ourlovegame-770b4.firebasestorage.app",
-            messagingSenderId: "397754256619",
-            appId: "1:397754256619:web:05a2f1afc0ccfe994cc2ae"
+            apiKey: "AIzaSyCwzIYap36WuMdXK7wl2peNzmebu8td42Y",
+            authDomain: "private-tictactoe-a0357.firebaseapp.com",
+            databaseURL: "https://private-tictactoe-a0357-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "private-tictactoe-a0357",
+            storageBucket: "private-tictactoe-a0357.firebasestorage.app",
+            messagingSenderId: "381177685409",
+            appId: "1:381177685409:web:95c704b720b3a697ba97e0"
         };
 
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let roomID, mySymbol, myName, opponentName, currentBoard, turn;
-        let typingTimeout;
+        let attempts = 0, isLocked = false;
+        let roomID, mySymbol, myName, opponentName = "Waiting...", currentBoard, turn;
+        let typingTimeout, setupHeartInterval, backgroundHeartInterval;
+        let lastDisplayedDate = null;
+        let initialChatLoadTime = Date.now();
+        let isOverlayOpen = false;
+        let winOverlayTimeout = null;
 
-        function checkPassword() {
-            if(document.getElementById('passInput').value === SECRET_PASSWORD) {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('game-content').style.display = 'block';
-            } else { alert("Wrong password, my love! ❤️"); }
+        // --- 1. LOCK SCREEN & SECURITY ---
+        function spawnHearts() {
+            const container = document.getElementById('lock-screen');
+            const icons = ['❤️', '💖', '💗', '✨'];
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'bg-heart';
+                heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 0.8 + 1) + 'rem';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                heart.style.opacity = Math.random() * 0.6;
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }, 600);
+        }
+        spawnHearts();
+
+        async function verifyAccess() {
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const input = document.getElementById('passInput');
+            const statusText = document.getElementById('statusText');
+
+            if (isLocked) return;
+
+            unlockBtn.disabled = true;
+            input.disabled = true;
+            btnText.innerText = "Checking...";
+            btnLoader.style.display = "inline-block";
+            statusText.style.display = "none";
+
+            try {
+                const snap = await database.ref('build_revision').once('value');
+                const correctCode = snap.val();
+
+                if (input.value.trim() === String(correctCode)) {
+                    btnText.innerText = "Welcome ❤️";
+                    btnLoader.style.display = "none";
+                    document.getElementById('lock-screen').style.display = 'none';
+                    document.getElementById('setup-area').style.display = 'flex';
+                    startBackgroundHearts();
+                    return;
+                }
+
+                attempts++;
+                const remaining = 3 - attempts;
+
+                if (remaining > 0) {
+                    statusText.innerText = `Wrong password! ${remaining} attempt${remaining === 1 ? '' : 's'} left`;
+                    statusText.style.display = 'block';
+                    btnText.innerText = "Unlock Our Space";
+                    btnLoader.style.display = "none";
+                    unlockBtn.disabled = false;
+                    input.disabled = false;
+                    input.focus();
+                } else {
+                    isLocked = true;
+                    btnText.innerText = "Locked";
+                    btnLoader.style.display = "none";
+                    let countdown = 60;
+                    statusText.innerText = `Try again in ${countdown} seconds.`;
+                    statusText.style.display = 'block';
+
+                    const timer = setInterval(() => {
+                        countdown--;
+                        statusText.innerText = `Try again in ${countdown} seconds.`;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            attempts = 0;
+                            isLocked = false;
+                            unlockBtn.disabled = false;
+                            input.disabled = false;
+                            btnText.innerText = "Unlock Our Space";
+                            statusText.style.display = 'none';
+                        }
+                    }, 1000);
+                }
+            } catch (e) {
+                console.error(e);
+                statusText.innerText = "Connection error. Please try again.";
+                statusText.style.display = "block";
+                btnText.innerText = "Unlock Our Space";
+                btnLoader.style.display = "none";
+                unlockBtn.disabled = false;
+                input.disabled = false;
+            }
+        }
+
+        // --- 2. SETUP SCREEN & ROOM CONNECT ---
+        function spawnSetupHeart() {
+            const wrapper = document.getElementById('setup-bg-elements');
+            if(!wrapper) return;
+            const heart = document.createElement('div');
+            heart.innerText = '❤️';
+            heart.style.left = Math.random() * 90 + 'vw';
+            heart.style.bottom = '-30px';
+            heart.style.fontSize = (Math.random() * 20 + 16) + 'px';
+            heart.style.opacity = (Math.random() * 0.35) + 0.55;
+            wrapper.appendChild(heart);
+            setTimeout(() => heart.remove(), 6200);
+        }
+
+        function startBackgroundHearts() {
+            if(backgroundHeartInterval) return;
+            backgroundHeartInterval = setInterval(spawnSetupHeart, 800);
+        }
+
+        function stopBackgroundHearts() {
+            if(backgroundHeartInterval) { clearInterval(backgroundHeartInterval); backgroundHeartInterval = null; }
+            const el = document.getElementById('setup-bg-elements');
+            if(el) el.innerHTML = '';
+        }
+
+        function toggleSetupLoader(show) {
+            const loading = document.getElementById('setup-loading');
+            const setupBox = document.querySelector('#setup-area .setup-box');
+            const inputs = [document.getElementById('nameInput'), document.getElementById('roomInput')];
+            const btn = document.querySelector('#setup-area button');
+
+            if(show) {
+                if(setupBox) setupBox.classList.add('loading');
+                if(setupHeartInterval) clearInterval(setupHeartInterval);
+                setupHeartInterval = setInterval(spawnSetupHeart, 180);
+            } else {
+                if(setupBox) setupBox.classList.remove('loading');
+                if(setupHeartInterval) { clearInterval(setupHeartInterval); setupHeartInterval = null; }
+            }
+
+            if(loading) loading.style.display = show ? 'flex' : 'none';
+            inputs.forEach(i => { if(i) i.disabled = show; });
+            if(btn) btn.disabled = show;
         }
 
         function joinRoom() {
-            roomID = document.getElementById("roomInput").value;
-            myName = document.getElementById("nameInput").value;
-            if (!roomID || !myName) return alert("Please fill your name and our code! ❤️");
+            const rawRoom = document.getElementById("roomInput").value;
+            roomID = rawRoom ? rawRoom.trim().toLowerCase() : "";
+            myName = document.getElementById("nameInput").value.trim();
+
+            if (!roomID || !myName) return alert("Please enter your name and our secret code! ❤️");
+
+            toggleSetupLoader(true);
 
             const roomRef = database.ref('rooms/' + roomID);
             roomRef.once('value').then((snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
                     mySymbol = "X";
-                    roomRef.set({ board: Array(9).fill(""), turn: "X", playerX: myName, playerO: "Waiting...", winsX: 0, winsO: 0, totalMatches: 0, scored: false });
-                } else {
+                    roomRef.set({
+                        board: Array(9).fill(""), turn: "X",
+                        playerX: myName, playerO: "Waiting...",
+                        winsX: 0, winsO: 0, totalMatches: 0, scored: false
+                    });
+                } else if (data.playerX === myName) {
+                    mySymbol = "X";
+                } else if (data.playerO === myName) {
+                    mySymbol = "O";
+                } else if (!data.playerO || data.playerO === "Waiting...") {
                     mySymbol = "O";
                     roomRef.update({ playerO: myName });
+                } else {
+                    mySymbol = "X";
                 }
+
+                // Presence tracking
+                const userRef = database.ref('rooms/' + roomID + '/online/' + mySymbol);
+                userRef.set({ lastSeen: Date.now(), name: myName });
+                setInterval(() => userRef.set({ lastSeen: Date.now(), name: myName }), 5000);
+                window.addEventListener('beforeunload', () => userRef.remove());
+
+                stopBackgroundHearts();
+                toggleSetupLoader(false);
                 document.getElementById("setup-area").style.display = "none";
-                document.getElementById("main-dashboard").style.display = "flex";
+                document.getElementById("main-content").style.display = "block";
+
+                showPresenceToast(`Our space is ready... welcome, ${myName}! 💖`);
+                playSound('user-joined.mp3');
+
                 listenForUpdates();
                 listenForChat();
                 listenForTyping();
+            }).catch(err => {
+                console.error(err);
+                toggleSetupLoader(false);
+                alert("Could not connect to our room. Please try again!");
             });
         }
 
+        // --- 3. TOAST & AUDIO HELPERS ---
+        function showPresenceToast(msg) {
+            const alertBox = document.getElementById('presence-alert');
+            alertBox.innerText = msg;
+            alertBox.classList.add('show');
+            setTimeout(() => alertBox.classList.remove('show'), 5000);
+        }
+
+        function playSound(src) {
+            try {
+                const audio = new Audio(src);
+                audio.volume = 0.35;
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+
+        // --- 4. GAME MECHANICS & REALTIME SYNC ---
+        function listenForUpdates() {
+            let lastPartnerOnline = false;
+
+            database.ref('rooms/' + roomID).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                currentBoard = data.board;
+                turn = data.turn;
+
+                const playerXName = data.playerX || "Player X";
+                const playerOName = data.playerO || "Player O";
+
+                document.getElementById('pname-X').innerText = playerXName;
+                document.getElementById('pname-O').innerText = playerOName;
+
+                document.getElementById('chip-X').style.display = (mySymbol === 'X') ? 'inline-block' : 'none';
+                document.getElementById('chip-O').style.display = (mySymbol === 'O') ? 'inline-block' : 'none';
+
+                opponentName = (mySymbol === "X") ? playerOName : playerXName;
+
+                // Online detection toast
+                const oppSymbol = mySymbol === "X" ? "O" : "X";
+                const oppData = data.online && data.online[oppSymbol];
+                const isOppOnline = oppData && (Date.now() - oppData.lastSeen < 12000);
+
+                if (isOppOnline && !lastPartnerOnline && opponentName !== "Waiting...") {
+                    showPresenceToast(`${opponentName} joined our game! 💖`);
+                    playSound('user-joined.mp3');
+                } else if (!isOppOnline && lastPartnerOnline && opponentName !== "Waiting...") {
+                    showPresenceToast(`${opponentName} disconnected... 🥀`);
+                    playSound('user-disconnected.mp3');
+                }
+                lastPartnerOnline = isOppOnline;
+
+                // Active Turn Highlight on Player Cards
+                const cardX = document.getElementById('card-X');
+                const cardO = document.getElementById('card-O');
+                cardX.classList.toggle('active-turn', turn === 'X');
+                cardO.classList.toggle('active-turn', turn === 'O');
+
+                // Render Board
+                const boardEl = document.getElementById("game-board");
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.getElementById('c' + i);
+                    cell.innerText = currentBoard[i];
+                    cell.className = 'cell';
+                    
+                    if (currentBoard[i] === "X") {
+                        cell.classList.add('taken', 'is-x');
+                    } else if (currentBoard[i] === "O") {
+                        cell.classList.add('taken', 'is-o');
+                    }
+                }
+
+                const winInfo = checkWinner(currentBoard);
+                const turnBadge = document.getElementById('turn-badge');
+
+                if (winInfo) {
+                    let winName = (winInfo.symbol === "X") ? playerXName : playerOName;
+                    let isMeWinner = (winInfo.symbol === mySymbol);
+                    turnBadge.innerText = isMeWinner ? "🎉 You Won! ❤️" : `✨ ${winName} Won! ❤️`;
+                    turnBadge.classList.remove('my-turn-glow');
+
+                    // Highlight winning 3-line tiles with glowing heartbeat pulse immediately
+                    winInfo.line.forEach(idx => document.getElementById('c' + idx).classList.add('winner'));
+                    boardEl.classList.remove("my-turn");
+
+                    // Compute live score immediately
+                    const isNewScore = !data.scored;
+                    const finalWinsX = (data.winsX || 0) + (isNewScore && winInfo.symbol === "X" ? 1 : 0);
+                    const finalWinsO = (data.winsO || 0) + (isNewScore && winInfo.symbol === "O" ? 1 : 0);
+                    const finalMatches = (data.totalMatches || 0) + (isNewScore ? 1 : 0);
+
+                    // Update UI immediately
+                    document.getElementById('pwins-X').innerText = finalWinsX;
+                    document.getElementById('pwins-O').innerText = finalWinsO;
+                    document.getElementById('round-label').innerText = `MATCH #${finalMatches || 1}`;
+
+                    // Delay overlay by 1 second so players can see the winning heartbeat pattern first!
+                    clearTimeout(winOverlayTimeout);
+                    winOverlayTimeout = setTimeout(() => {
+                        showVictoryOverlay(isMeWinner, winName, finalMatches || 1, finalWinsX, finalWinsO);
+                    }, 1000);
+
+                    // Save score to Firebase (designated updater)
+                    if (isNewScore && (mySymbol === "X" || winInfo.symbol === mySymbol)) {
+                        database.ref('rooms/' + roomID).update({
+                            scored: true,
+                            totalMatches: finalMatches,
+                            winsX: finalWinsX,
+                            winsO: finalWinsO
+                        });
+                    }
+                } else if (!currentBoard.includes("")) {
+                    turnBadge.innerText = "A Tie! ❤️";
+                    turnBadge.classList.remove('my-turn-glow');
+                    boardEl.classList.remove("my-turn");
+
+                    const isNewScore = !data.scored;
+                    const finalMatches = (data.totalMatches || 0) + (isNewScore ? 1 : 0);
+
+                    document.getElementById('pwins-X').innerText = data.winsX || 0;
+                    document.getElementById('pwins-O').innerText = data.winsO || 0;
+                    document.getElementById('round-label').innerText = `MATCH #${finalMatches || 1}`;
+
+                    clearTimeout(winOverlayTimeout);
+                    winOverlayTimeout = setTimeout(() => {
+                        showTieOverlay(finalMatches || 1, data.winsX || 0, data.winsO || 0);
+                    }, 900);
+
+                    if (isNewScore && mySymbol === "X") {
+                        database.ref('rooms/' + roomID).update({
+                            scored: true,
+                            totalMatches: finalMatches
+                        });
+                    }
+                } else {
+                    clearTimeout(winOverlayTimeout);
+                    closeWinOverlay();
+                    document.getElementById('pwins-X').innerText = data.winsX || 0;
+                    document.getElementById('pwins-O').innerText = data.winsO || 0;
+                    document.getElementById('round-label').innerText = `MATCH #${(data.totalMatches || 0) + 1}`;
+
+                    if (turn === mySymbol) {
+                        turnBadge.innerText = "Your Turn ✨";
+                        turnBadge.classList.add('my-turn-glow');
+                        boardEl.classList.add("my-turn");
+                    } else {
+                        turnBadge.innerText = (opponentName === "Waiting..." ? "Waiting..." : `${opponentName}'s Turn ✋`);
+                        turnBadge.classList.remove('my-turn-glow');
+                        boardEl.classList.remove("my-turn");
+                    }
+                }
+            });
+        }
+
+        // --- VICTORY OVERLAY & PARTY POPPER EFFECT ---
+        function showVictoryOverlay(isMeWinner, winName, matchNum, winsX, winsO) {
+            const overlay = document.getElementById('win-overlay');
+            const ribbon = document.getElementById('win-ribbon');
+            const icon = document.getElementById('win-icon');
+            const title = document.getElementById('win-title');
+            const sub = document.getElementById('win-subtitle');
+            
+            // Format score relative to current user
+            const myWins = (mySymbol === 'X') ? winsX : winsO;
+            const oppWins = (mySymbol === 'X') ? winsO : winsX;
+            const oppShortName = (opponentName === 'Waiting...' ? 'Love' : opponentName.split(' ')[0]);
+
+            document.getElementById('win-round-stat').innerText = `#${matchNum}`;
+            document.getElementById('win-score-stat').innerText = `You: ${myWins} • ${oppShortName}: ${oppWins}`;
+
+            if (isMeWinner) {
+                ribbon.innerText = "🏆 MATCH CHAMPION";
+                icon.innerText = "👑";
+                title.innerText = "ROYAL VICTORY!";
+                sub.innerText = "You captured my heart in every move ❤️";
+            } else {
+                ribbon.innerText = `🌹 ${winName.toUpperCase()} WON`;
+                icon.innerText = "💘";
+                title.innerText = "SWEET DEFEAT!";
+                sub.innerText = "Defeated by your love, and loving every second ❤️";
+            }
+
+            if (!isOverlayOpen) {
+                isOverlayOpen = true;
+                overlay.style.display = 'flex';
+                fireCrispPartyPoppers();
+            }
+        }
+
+        function showTieOverlay(matchNum, winsX, winsO) {
+            const overlay = document.getElementById('win-overlay');
+            const myWins = (mySymbol === 'X') ? winsX : winsO;
+            const oppWins = (mySymbol === 'X') ? winsO : winsX;
+            const oppShortName = (opponentName === 'Waiting...' ? 'Love' : opponentName.split(' ')[0]);
+
+            document.getElementById('win-ribbon').innerText = "🕊️ EQUAL LOVE";
+            document.getElementById('win-icon').innerText = "🤍";
+            document.getElementById('win-title').innerText = "BEAUTIFUL DRAW!";
+            document.getElementById('win-subtitle').innerText = "Two souls perfectly matched in every way ✨";
+            document.getElementById('win-round-stat').innerText = `#${matchNum}`;
+            document.getElementById('win-score-stat').innerText = `You: ${myWins} • ${oppShortName}: ${oppWins}`;
+
+            if (!isOverlayOpen) {
+                isOverlayOpen = true;
+                overlay.style.display = 'flex';
+                fireCrispPartyPoppers();
+            }
+        }
+
+        function closeWinOverlay() {
+            clearTimeout(winOverlayTimeout);
+            isOverlayOpen = false;
+            document.getElementById('win-overlay').style.display = 'none';
+        }
+
+        function fireCrispPartyPoppers() {
+            const end = Date.now() + 2000;
+            const colors = ['#ff2a5f', '#ff0055', '#ffd166', '#ffffff', '#ff758c'];
+
+            // Immediate 360 center blast in the foreground
+            confetti({
+                particleCount: 100,
+                spread: 360,
+                origin: { x: 0.5, y: 0.45 },
+                colors: colors,
+                scalar: 1.4,
+                zIndex: 10000005
+            });
+
+            // Side Cannons (continuous bursts across the screen)
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 75,
+                    origin: { x: 0, y: 0.85 },
+                    colors: colors,
+                    shapes: ['heart', 'circle'],
+                    scalar: 1.4,
+                    zIndex: 10000005
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 75,
+                    origin: { x: 1, y: 0.85 },
+                    colors: colors,
+                    shapes: ['heart', 'circle'],
+                    scalar: 1.4,
+                    zIndex: 10000005
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function makeMove(i) {
+            if (turn !== mySymbol || currentBoard[i] !== "" || checkWinner(currentBoard)) return;
+            currentBoard[i] = mySymbol;
+            database.ref('rooms/' + roomID).update({
+                board: currentBoard,
+                turn: (mySymbol === "X" ? "O" : "X")
+            });
+        }
+
+        function restartGame() {
+            closeWinOverlay();
+            database.ref('rooms/' + roomID).update({
+                board: Array(9).fill(""),
+                turn: "X",
+                scored: false
+            });
+        }
+
+        function checkWinner(b) {
+            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for (let line of lines) {
+                if (b[line[0]] && b[line[0]] === b[line[1]] && b[line[0]] === b[line[2]]) {
+                    return { symbol: b[line[0]], line: line };
+                }
+            }
+            return null;
+        }
+
+        // --- 5. UPGRADED CHAT & REAL-TIME TYPING INDICATOR ---
         const chatInput = document.getElementById('chatInput');
         chatInput.addEventListener('input', () => {
-            updateTypingStatus(true);
+            const hasText = chatInput.value.trim().length > 0;
+            updateTypingStatus(hasText);
             clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => updateTypingStatus(false), 2000);
+            if (hasText) {
+                typingTimeout = setTimeout(() => updateTypingStatus(false), 2500);
+            }
         });
 
         function updateTypingStatus(isTyping) {
-            if (!roomID) return;
+            if (!roomID || !mySymbol) return;
             database.ref('rooms/' + roomID + '/typing/' + mySymbol).set(isTyping);
         }
 
         function listenForTyping() {
             const opponentSymbol = (mySymbol === 'X' ? 'O' : 'X');
             database.ref('rooms/' + roomID + '/typing/' + opponentSymbol).on('value', (snapshot) => {
-                const isTyping = snapshot.val();
+                const isTyping = snapshot.val() === true;
                 const indicator = document.getElementById('typing-indicator');
-                if (isTyping && opponentName !== "Waiting...") {
-                    indicator.innerText = `💖 ${opponentName} is pouring their heart out...`;
-                } else { indicator.innerText = ""; }
-            });
-        }
-
-        function listenForUpdates() {
-            database.ref('rooms/' + roomID).on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
-                currentBoard = data.board;
-                turn = data.turn;
-                document.getElementById('total-games').innerText = data.totalMatches || 0;
-                document.getElementById('wins-x').innerText = data.winsX || 0;
-                document.getElementById('wins-o').innerText = data.winsO || 0;
-                document.getElementById('label-x').innerText = data.playerX.split(' ')[0] + "'s Wins";
-                document.getElementById('label-o').innerText = data.playerO.split(' ')[0] + "'s Wins";
-                document.getElementById('tag-X').innerHTML = `${data.playerX} <span>(X)</span>`;
-                document.getElementById('tag-O').innerHTML = `${data.playerO} <span>(O)</span>`;
-                opponentName = (mySymbol === "X") ? data.playerO : data.playerX;
-                const boardEl = document.getElementById("game-board");
-                for (let i = 0; i < 9; i++) {
-                    const cell = document.getElementById('c' + i);
-                    cell.innerText = currentBoard[i];
-                    cell.classList.remove('winner');
-                }
-                const winInfo = checkWinner(currentBoard);
-                if (winInfo) {
-                    let winName = (winInfo.symbol === "X") ? data.playerX : data.playerO;
-                    document.getElementById("status").innerText = "✨ " + winName + " won your heart! ❤️";
-                    winInfo.line.forEach(idx => document.getElementById('c'+idx).classList.add('winner'));
-                    document.getElementById("restartBtn").style.display = "block";
-                    boardEl.classList.remove("my-turn");
-                    if(!data.scored && mySymbol === "X") {
-                        database.ref('rooms/' + roomID).update({ scored: true, totalMatches: (data.totalMatches || 0) + 1, winsX: winInfo.symbol === "X" ? (data.winsX || 0) + 1 : (data.winsX || 0), winsO: winInfo.symbol === "O" ? (data.winsO || 0) + 1 : (data.winsO || 0) });
-                    }
-                } else if (!currentBoard.includes("")) {
-                    document.getElementById("status").innerText = "A Beautiful Tie! ❤️";
-                    document.getElementById("restartBtn").style.display = "block";
-                    if(!data.scored && mySymbol === "X") { database.ref('rooms/' + roomID).update({ scored: true, totalMatches: (data.totalMatches || 0) + 1 }); }
+                if (isTyping) {
+                    const oppDisplay = (opponentName && opponentName !== "Waiting...") ? opponentName : (mySymbol === 'X' ? 'Player O' : 'Player X');
+                    indicator.innerText = `💖 ${oppDisplay} is typing something sweet...`;
+                    indicator.classList.add('active');
                 } else {
-                    document.getElementById("restartBtn").style.display = "none";
-                    if (turn === mySymbol) { document.getElementById("status").innerText = "Your Turn ✨"; boardEl.classList.add("my-turn"); }
-                    else { document.getElementById("status").innerText = "Waiting for " + (opponentName === "Waiting..." ? "you" : opponentName) + "... ❤️"; boardEl.classList.remove("my-turn"); }
+                    indicator.classList.remove('active');
                 }
             });
         }
 
-        function makeMove(i) {
-            if (turn !== mySymbol || currentBoard[i] !== "" || checkWinner(currentBoard)) return;
-            currentBoard[i] = mySymbol;
-            database.ref('rooms/' + roomID).update({ board: currentBoard, turn: (mySymbol === "X" ? "O" : "X") });
+        function linkifyText(text) {
+            if (!text) return '';
+            const urlRegex = /\bhttps?:\/\/[\w\-\._~:\/?#\[\]@!$&'()*+,;=%]+/gi;
+            const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return escaped.replace(urlRegex, url => `<a href="${url.trim()}" target="_blank" rel="noopener noreferrer" class="chat-link">${url.trim()}</a>`).replace(/\n/g, '<br>');
         }
 
-        function restartGame() { database.ref('rooms/' + roomID).update({ board: Array(9).fill(""), turn: "X", scored: false }); }
+        function addDateHeaderIfNeeded(timestamp) {
+            const messagesEl = document.getElementById("chat-messages");
+            const currentDate = new Date(timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+            if (lastDisplayedDate === currentDate) return;
 
-        function checkWinner(b) {
-            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for (let line of lines) { if (b[line[0]] && b[line[0]] === b[line[1]] && b[line[0]] === b[line[2]]) { return { symbol: b[line[0]], line: line }; } }
-            return null;
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'date-separator';
+            dateDiv.textContent = currentDate;
+            messagesEl.appendChild(dateDiv);
+            lastDisplayedDate = currentDate;
         }
 
         function sendChatMessage() {
-            const msgInput = document.getElementById("chatInput");
-            if (!msgInput.value.trim()) return;
-            database.ref('rooms/' + roomID + '/messages').push({ sender: myName, text: msgInput.value });
+            const text = chatInput.value.trim();
+            if (!text) return;
+            database.ref('rooms/' + roomID + '/messages').push({
+                sender: myName,
+                text: text,
+                time: Date.now(),
+                heart: false
+            });
             updateTypingStatus(false);
-            msgInput.value = "";
+            chatInput.value = "";
+        }
+
+        function renderChatMessage(msg, key) {
+            addDateHeaderIfNeeded(msg.time || Date.now());
+            const chatBox = document.getElementById("chat-messages");
+            const div = document.createElement("div");
+            const isMe = msg.sender === myName;
+            const timeLabel = new Date(msg.time || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            div.className = `msg ${isMe ? 'me' : 'them'}`;
+            div.dataset.messageId = key;
+            div.innerHTML = `
+                <div class="msg-sender">${isMe ? 'You' : msg.sender}</div>
+                <div>${linkifyText(msg.text)}</div>
+                <div class="msg-time">${timeLabel}</div>
+                <span class="heart-pill${msg.heart ? ' hearted' : ''}">❤</span>
+            `;
+
+            // Double Click to React
+            div.addEventListener('dblclick', (e) => {
+                if (e.target.closest('.heart-pill')) return;
+                toggleHeart(key);
+            });
+
+            // Single click on heart pill
+            div.querySelector('.heart-pill').addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleHeart(key);
+            });
+
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            if (!isMe && (msg.time || 0) > initialChatLoadTime) {
+                playSound('message-received.mp3');
+            }
+        }
+
+        function toggleHeart(messageKey) {
+            if (!messageKey || !roomID) return;
+            const ref = database.ref('rooms/' + roomID + '/messages/' + messageKey);
+            ref.once('value').then(snap => {
+                const val = snap.val();
+                if (!val) return;
+                ref.update({ heart: !val.heart });
+            });
+        }
+
+        function updateMessageHeart(key, isHearted) {
+            const msgEl = document.querySelector(`.msg[data-message-id="${key}"]`);
+            if (!msgEl) return;
+            const pill = msgEl.querySelector('.heart-pill');
+            if (!pill) return;
+
+            const wasHearted = pill.classList.contains('hearted');
+            pill.classList.toggle('hearted', !!isHearted);
+
+            if (isHearted && !wasHearted) {
+                pill.classList.add('heartbeat');
+                setTimeout(() => pill.classList.remove('heartbeat'), 600);
+
+                // Floating small hearts
+                for (let i = 0; i < 3; i++) {
+                    const small = document.createElement('span');
+                    small.className = 'small-heart';
+                    small.innerText = '❤️';
+                    small.style.left = (15 + i * 10) + 'px';
+                    small.style.bottom = '10px';
+                    small.style.setProperty('--tx', (i * 15 - 15) + 'px');
+                    small.style.setProperty('--ty', (-40 - i * 8) + 'px');
+                    msgEl.appendChild(small);
+                    setTimeout(() => small.remove(), 1000);
+                }
+
+                playSound('chat-reaction.mp3');
+            }
         }
 
         function listenForChat() {
-            const chatBox = document.getElementById("chat-messages");
-            database.ref('rooms/' + roomID + '/messages').on('child_added', (snapshot) => {
-                const msg = snapshot.val();
-                const div = document.createElement("div");
-                const isMe = msg.sender === myName;
-                div.className = `msg ${isMe ? 'me' : 'them'}`;
-                div.innerHTML = `<div class="msg-sender">${isMe ? 'You' : msg.sender}</div>${msg.text}`;
-                chatBox.appendChild(div);
-                chatBox.scrollTop = chatBox.scrollHeight;
+            const messagesRef = database.ref('rooms/' + roomID + '/messages');
+            messagesRef.on('child_added', (snapshot) => {
+                renderChatMessage(snapshot.val(), snapshot.key);
+            });
+            messagesRef.on('child_changed', (snapshot) => {
+                const val = snapshot.val();
+                if (val) updateMessageHeart(snapshot.key, val.heart);
             });
         }
     </script>
